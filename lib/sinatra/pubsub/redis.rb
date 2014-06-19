@@ -15,9 +15,11 @@ module Sinatra
         end
       end
 
-      def publish(channel, message)
+      def publish(channels, message)
         redis = ::Redis.connect
-        redis.publish("pubsub.#{channel}", message)
+        Array(channels).uniq.each do |c|
+          redis.publish("pubsub.#{c}", message)
+        end
       end
 
       def publish_all(message)
